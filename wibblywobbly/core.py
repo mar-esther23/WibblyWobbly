@@ -1,4 +1,3 @@
-import logging
 from pandas import DataFrame
 from fuzzywuzzy import process
 

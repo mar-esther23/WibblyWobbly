@@ -1,7 +1,6 @@
 import unittest
 import warnings
 import pandas as pd
-from random import seed
 
 import wibblywobbly as ww
 
