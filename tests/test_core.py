@@ -13,9 +13,10 @@ class TestCore(unittest.TestCase):
         self.data = ["mice",  "CAT ", "doggo", "PERSON", 999]
         df = [['CAT ', 'Cat', 100], 
               ['doggo', 'Dog', 90], 
-              ['mice', 'Mouse', 44], 
-              ['PERSON', 'Dog', 30], 
-              [999, 999, 0]]
+              ['mice', 'mice', 0], 
+              ['PERSON', 'PERSON', 0], 
+              [999, 999, 0],
+              ]
         df = pd.DataFrame(df, columns=["Data", "Option1", "Score1"])
         self.df_res=df
 
@@ -27,7 +28,7 @@ class TestCore(unittest.TestCase):
 
     def test_warn_review(self):
         """Check the warning text is correctly created depending on options"""
-        res = "WOBBLY: Human\n\tOptions: Human (100), Homo sapiens (95), Person (90)"
+        res = "WOBBLY: Human\n\tOptions: Human (100), Homo sapiens (95), Person (90)\n"
         ctg, top = "WOBBLY", "Human"
         options  = [("Human", 100), ("Homo sapiens", 95), ("Person", 90)]
         # catch warnings to check them
@@ -39,49 +40,51 @@ class TestCore(unittest.TestCase):
                 self.assertEqual( res, str(w.message) )
 
     def test_map_dataframe(self):
-        sol = ww.map_list_to_catalog(self.data, self.ctlg, 
-                 result="dataframe", max_options=1)
+        sol = ww.map_list_to_catalog(self.data, self.ctlg, max_options=1)
         self.assertTrue( sol.equals(self.df_res) )
 
     def test_map_dictionary(self):
         res = {'mice': 'mice', 'CAT ': 'Cat', 'doggo': 'Dog', 
                'PERSON': 'PERSON', 999: 999 }
-        sol = ww.map_list_to_catalog(self.data, self.ctlg)
+        sol = ww.map_list_to_catalog(self.data, self.ctlg, output_format="dictionary")
+        self.assertEqual( res, sol )
+
+    def test_map_thr_accept(self):
+        res = {'mice': 'mice', 'CAT ': 'Cat', 'doggo': 'Dog', 
+               'PERSON': 'PERSON', 999: 999 }
+        sol = ww.map_list_to_catalog(self.data, self.ctlg, output_format="dictionary", thr_accept=91)
         self.assertEqual( res, sol )
 
     def test_map_thr_reject(self):
         res = {'mice': 'Mouse', 'CAT ': 'Cat', 'doggo': 'Dog', 
                'PERSON': 'PERSON', 999: 999 }
-        sol = ww.map_list_to_catalog(self.data, self.ctlg, 
-                                     thr_reject=43)
+        sol = ww.map_list_to_catalog(self.data, self.ctlg, output_format="dictionary", thr_reject=43)
         self.assertEqual( res, sol )
 
     def test_map_reject_value(self):
         res = {'mice': 'Other', 'CAT ': 'Cat', 'doggo': 'Dog', 
                'PERSON': 'Other', 999: 999 }
-        sol = ww.map_list_to_catalog(self.data, self.ctlg, 
-                                     reject_value='Other')
+        sol = ww.map_list_to_catalog(self.data, self.ctlg, output_format="dictionary", reject_value='Other')
         self.assertEqual( res, sol )
 
     def test_map_max_options(self):
         res = ["Data", "Option1", "Score1", "Option2", "Score2", "Option3", "Score3"]
-        sol = ww.map_list_to_catalog(self.data, self.ctlg, 
-                 result="dataframe", max_options=3)
+        sol = ww.map_list_to_catalog(self.data, self.ctlg, max_options=3)
+        self.assertEqual( res[0:3], sol.columns.to_list() )
+        sol = ww.map_list_to_catalog(self.data, self.ctlg, max_options=3, thr_reject=20)
         self.assertEqual( res, sol.columns.to_list() )
 
     def test_map_warnings(self):
-        res = ["WOBBLY: doggo\n\tOptions: Dog (90)",
-               "REJECT: PERSON\n\tOptions: Dog (30)",
-               "REJECT: mice\n\tOptions: Mouse (44)" ]
+        res = ["WOBBLY: PERSON\n\tOptions: Dog (30)\n",
+               "WOBBLY: mice\n\tOptions: Mouse (44)\n" ]
         # catch warnings to check them
         with warnings.catch_warnings(record=True) as warn:
             warnings.simplefilter("always")
             # check the text is created
-            sol = ww.map_list_to_catalog(self.data, self.ctlg, max_options=1,
-                                         warnings=True, thr_warn=95)
+            sol = ww.map_list_to_catalog(self.data, self.ctlg, thr_reject=20, max_options=1, warnings=True)
             for w in warn:
                 self.assertIn( str(w.message), res )
-    
+
 if __name__ == '__main__':
     unittest.main()
 
