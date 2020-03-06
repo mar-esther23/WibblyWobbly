@@ -45,6 +45,19 @@ def map_list_to_catalog(data, catalog, output_format="dataframe",
 
     Examples
     --------
+    >>> catalog = ["Mouse", "Cat", "Dog", "Human"]
+    >>> data = ["mice",  "CAT ", "doggo", "PERSON", 999]
+    >>> ww.map_list_to_catalog(data, catalog, thr_accept=95, thr_reject=40)
+        Data    Option1     Score1  Option2     Score2  Option3     Score3
+    0   CAT     Cat     100     None    NaN     None    NaN
+    1   doggo   Dog     90  Mouse   20.0    Human   0.0
+    2   mice    Mouse   44  Cat     29.0    Human   22.0
+    3   PERSON  PERSON  0   None    NaN     None    NaN
+    4   999     999     0   None    NaN     None    NaN
+
+    >>> ww.map_list_to_catalog(data, catalog, output_format="dictionary", reject_value='Other')
+    {'mice':'Other', 999:999, 'doggo':'Dog', 'PERSON':'Other', 'CAT ':'Cat'}
+
     """
 
     def unnest(l):
@@ -101,7 +114,24 @@ def map_list_to_catalog(data, catalog, output_format="dataframe",
     
 
 def simplify_string(text):
-    """Simplify a string to remove special characters, double spaces and use lower case."""
+    """Simplify a string to remove special characters, double spaces and use lower case.
+
+    Parameters
+    ----------
+    text: str
+        string to clean
+
+    Returns
+    -------
+    str
+
+    Examples
+    --------
+    >>> text = ' (S . cerevisiáe  )'
+    >>> simplify_string(text)
+    's cerevisiae'
+
+    """
     text = text.lower()
     text = ' '.join([t for t in text.split()])
     text = unidecode(text)
@@ -110,6 +140,9 @@ def simplify_string(text):
     return text
 
 def warn_review(category, item, options):
+    """
+    Overwrite formatwarning to simplify options evaluation.
+    """
     def warn_text(message, category='', filename='', lineno='', line=''):
         return str(message)
     # create message
