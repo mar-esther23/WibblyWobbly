@@ -88,7 +88,9 @@ def map_list_to_catalog(data, catalog, output_format="dataframe",
             top_score = options[0][1]
             if top_score>=thr_accept:
                 options = [options[0]]
-            elif top_score<=thr_reject:
+            elif top_score<thr_reject:
+                if warnings:
+                    warn_review("REJECT", item, options)
                 if reject_value==None: options = [(item,0)]
                 else: options = [(reject_value,0)]
             elif warnings:

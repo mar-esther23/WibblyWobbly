@@ -15,7 +15,6 @@ setup(
           'pandas',
       ],
   classifiers=[
-    'Topic :: Data Science :: Data cleaning',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3',
   ],
