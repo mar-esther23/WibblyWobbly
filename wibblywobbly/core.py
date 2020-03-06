@@ -113,10 +113,10 @@ def simplify_string(text):
 
 def warn_review(category, item, options):
     def warn_text(message, category='', filename='', lineno='', line=''):
-        return message
+        return str(message)
     # create message
     options = ', '.join(["{} ({})".format(*i) for i in options])
-    message = "{}: {}\n\tOptions: {}".format( category, item, options )
+    message = "{}: {}\n\tOptions: {}\n".format( category, item, options )
     # raise warning
     warnings.formatwarning = warn_text
     warnings.warn(message)

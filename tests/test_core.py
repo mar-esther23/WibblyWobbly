@@ -9,7 +9,6 @@ import wibblywobbly as ww
 class TestCore(unittest.TestCase):
 
     def setUp(self):
-        seed(9001)
         self.ctlg = ["Mouse", "Cat", "Dog", "Human"]
         self.data = ["mice",  "CAT ", "doggo", "PERSON", 999]
         df = [['CAT ', 'Cat', 100], 
