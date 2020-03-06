@@ -64,3 +64,8 @@ Distribuido bajo la licencia XYZ. Ver ``LICENSE`` para más información.
 [npm-downloads]: https://img.shields.io/npm/dm/datadog-metrics.svg?style=flat-square
 [travis-image]: https://img.shields.io/travis/dbader/node-datadog-metrics/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
+
+
+## 
+
+You see, most people think that time is a strict progression of cause to effect, but actually, from a non-linear, non-subjective point of view, it’s more like a big ball of...Wibbly-Wobbly...Timey-Wimey...stuff.

@@ -1,0 +1,11 @@
+Common name,Order,Family,Genus,Species
+Guinea pig,Rodentia,Caviidae,Cavia,porcellus
+Mouse,Rodentia,Muridae,Mus,musculus
+Rat,Rodentia,Muridae,Rattus,norvegicus
+Cat,Carnivora,Felidae,Felis,catus
+Dog,Carnivora,Canidae,Canis,lupus
+Rhesus macaque,Primates,Cercopithecidae,Macaca,mulatta
+Chimpanzee,Primates,Hominidae,Pan,troglodytes
+Gorilla,Primates,Hominidae,Gorilla,gorilla
+Orangutan,Primates,Hominidae,Pongo,pygmaeus 
+Human,Primates,Hominidae,Homo,sapiens
