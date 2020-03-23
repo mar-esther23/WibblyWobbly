@@ -1,7 +1,7 @@
 WibblyWobbly
 ============
 
-Python library to create equivalence dictionaries between a set of texts and a catalog using FuzzyWuzzy.
+Python library to create equivalence dictionaries between a set of texts and a catalog using RapidFuzz.
 
 It is a common nightmare for data scientist, your human users captured the data according to a catalog but it is full of mistakes. WibblyWobbly automates the task of automatically matching the data to a catalog while allowing for manual review of suspicious cases and rejecting bad matches.
 
@@ -9,8 +9,7 @@ Requirements
 ------------
 
 -  Python 3 or higher
--  fuzzywuzzy
--  python-Levenshtein (optional)
+-  rapidfuzz
 -  unidecode
 -  pandas
 
@@ -23,18 +22,13 @@ Using PIP via PyPI
 
    pip install wibblywobbly
 
-WibblyWobbly extends fuzzywuzzy, it is recomended to install python-Levenshtein too
-
-.. code:: sh
-
-   pip install fuzzywuzzy[speedup]
 
 Manually via GIT
 
 .. code:: sh
 
    git clone git://github.com/mar-esther23/wibblywobbly.git wibblywobbly
-   cd fuzzywuzzy
+   cd wibblywobbly
    python setup.py install
 
 Usage

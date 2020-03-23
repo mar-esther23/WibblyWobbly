@@ -1,5 +1,5 @@
 from pandas import DataFrame
-from fuzzywuzzy import process
+from rapidfuzz import process
 
 from unidecode import unidecode
 from re import sub as resub
@@ -11,7 +11,7 @@ def map_list_to_catalog(data, catalog, output_format="dataframe",
     """
     Create an equivalence dictionary between data and a catalog.
 
-    Take a 'data' list of dirty strings that will be mapped to a 'catalog' and return the equivalence dictionary with that mapping. Obtains a list of options with similarity scores. Uses fuzzywuzzy.process.extract().
+    Take a 'data' list of dirty strings that will be mapped to a 'catalog' and return the equivalence dictionary with that mapping. Obtains a list of options with similarity scores. Uses rapidfuzz.process.extract().
     
     Parameters
     ----------
