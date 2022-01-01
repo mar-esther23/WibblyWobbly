@@ -1,9 +1,57 @@
-from pandas import DataFrame
-from fuzzywuzzy import process
-
-from unidecode import unidecode
-from re import sub as resub
 import warnings
+import logging
+
+from pandas import DataFrame
+from thefuzz import process
+from unidecode import unidecode
+from random import shuffle
+from re import sub as resub
+
+def unnest(l):
+        return [i for sub in l for i in sub]
+
+
+def simplify_string(text):
+    """Simplify a string to remove special characters, double spaces and use lower case.
+
+    Parameters
+    ----------
+    text: str
+        string to clean
+
+    Returns
+    -------
+    str
+
+    Examples
+    --------
+    >>> text = ' (S . cerevisiáe  )'
+    >>> simplify_string(text)
+    's cerevisiae'
+
+    """
+    text = text.lower()
+    text = ' '.join([t for t in text.split()])
+    text = unidecode(text)
+    text = resub(r"[^a-zA-Z0-9]+", ' ', text)
+    text = ' '.join([t for t in text.split()]) #paranoia
+    return text
+
+
+def warn_review(category, item, options):
+    """
+    Overwrite formatwarning to simplify options evaluation.
+    """
+    def warn_text(message, category='', filename='', lineno='', line=''):
+        return str(message)
+    # create message
+    options = ', '.join(["{} ({})".format(*i) for i in options])
+    message = "{}: {}\n\tOptions: {}\n".format( category, item, options )
+    # raise warning
+    warnings.formatwarning = warn_text
+    warnings.warn(message)
+
+
 
 def map_list_to_catalog(data, catalog, output_format="dataframe", 
                         thr_accept=90, thr_reject=75, reject_value=None,
@@ -60,8 +108,7 @@ def map_list_to_catalog(data, catalog, output_format="dataframe",
 
     """
 
-    def unnest(l):
-        return [i for sub in l for i in sub]
+    
     if thr_reject>=thr_accept:
         raise ValueError("Invalid threshold values")
     if output_format=="dictionary": res = {}
@@ -95,7 +142,7 @@ def map_list_to_catalog(data, catalog, output_format="dataframe",
                 else: options = [(reject_value,0)]
             elif warnings:
                 warn_review("WOBBLY", item, options)
-        #print(item,options)
+        logging.info(item,options)
         if output_format=="dataframe":
             res.append( [item]+unnest(options) )
         if output_format=="dictionary":
@@ -113,45 +160,93 @@ def map_list_to_catalog(data, catalog, output_format="dataframe",
         res = res.sort_values(["Score1","Data"], ascending=[False,False]) \
                  .reset_index(drop=True)
     return res
+
+
+
+def cluster_strings(data, thr_accept=90, max_options=None, simplify=True, randomize=True):
+    """
+    Cluster similar strings.
+
+    Take a 'data' list of strings and create clusters of those whose levenshtein distance is higher than thr_accept. This is a rough algoritm, once a cluster has been formed none of its elements will belong to an other cluster.
     
-
-def simplify_string(text):
-    """Simplify a string to remove special characters, double spaces and use lower case.
-
     Parameters
     ----------
-    text: str
-        string to clean
+    data: list of str
+        List of strings with the data to be mapped to the catalog
+    thr_accept: int, default '90'
+        Treshold value for acceptance. If the top score is higher than this the top value will be assigned and no options shown
+    max_options: int, default None
+        Number of elementos of cluster to return. If None returns all options, else it returns N options.
+    simplify: bool
+        Simplify every string before comparison to improve score
+    simplify: bool
+        Shuffle data, the order of the list affects cluster formation.
+
 
     Returns
     -------
-    str
+    list of lists
+        List of lists where each list contains the strings that clustered together by levenshtein distance.
 
     Examples
     --------
-    >>> text = ' (S . cerevisiáe  )'
-    >>> simplify_string(text)
-    's cerevisiae'
+    >>> catalog = ["Mouse", "Cat", "Dog", "Human"]
+    >>> data = ["mice",  "CAT ", "doggo", "PERSON", 999]
+    >>> ww.map_list_to_catalog(data, catalog, thr_accept=95, thr_reject=40)
+        Data    Option1     Score1  Option2     Score2  Option3     Score3
+    0   CAT     Cat     100     None    NaN     None    NaN
+    1   doggo   Dog     90  Mouse   20.0    Human   0.0
+    2   mice    Mouse   44  Cat     29.0    Human   22.0
+    3   PERSON  PERSON  0   None    NaN     None    NaN
+    4   999     999     0   None    NaN     None    NaN
+
+    >>> ww.map_list_to_catalog(data, catalog, output_format="dictionary", reject_value='Other')
+    {'mice':'Other', 999:999, 'doggo':'Dog', 'PERSON':'Other', 'CAT ':'Cat'}
 
     """
-    text = text.lower()
-    text = ' '.join([t for t in text.split()])
-    text = unidecode(text)
-    text = resub(r"[^a-zA-Z0-9]+", ' ', text)
-    text = ' '.join([t for t in text.split()]) #paranoia
-    return text
+    if simplify: # create a dictionary of strings that have been simplified to the same place
+        dic_simple = {}
+        for old in set(data):
+            if type(old)==str:
+                new = simplify_string(old)
+                if new in dic_simple.keys():
+                    dic_simple[new].append(old)
+                else: dic_simple[new] = [old]
+        logging.info("Save string simplification {}".format(dic_simple))
+        data_ = list(dic_simple.keys())
+    else: data_ = list(set(data))
 
-def warn_review(category, item, options):
-    """
-    Overwrite formatwarning to simplify options evaluation.
-    """
-    def warn_text(message, category='', filename='', lineno='', line=''):
-        return str(message)
-    # create message
-    options = ', '.join(["{} ({})".format(*i) for i in options])
-    message = "{}: {}\n\tOptions: {}\n".format( category, item, options )
-    # raise warning
-    warnings.formatwarning = warn_text
-    warnings.warn(message)
+    # because list order affects cluster formation
+    if randomize: shuffle(data_)
+    
+    # group if similar enough
+    groups = []
+    while len(data_)>1:
+        target = data_.pop()
+        if type(target)==str:
+            group = process.extract(target,data_)
+            group = [t for t,s in group if s>=thr_accept]
+            for s in group: #don't match twice
+                data_.remove(s)
+        else: group = []
+        groups.append([target] + group)
+    logging.info("Group by fuzz distance {}".format(groups))
+    
+    if simplify:
+        groups = [[dic_simple[g] for g in group] for group in groups]
+        groups = [unnest(group) for group in groups]
+        logging.info("Return to original string {}".format(groups))
+    
+    if max_options!=None:
+        groups = [group[0:max_options] for group in groups]
+        if max_options==1:
+            groups = [group[0] for group in groups]
+        logging.info("Return only top N options {}".format(groups))
+    
+    return(groups)
+
+    
+
+
 
     
