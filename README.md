@@ -31,11 +31,10 @@ pip install python-Levenshtein
 
 ### Match data to a catalog
 
-Import wibblywobbly and load your data and catalog as list. If you are using pandas use *.to_list()*.
+Import wibblywobbly and load your data and catalog as list. If you are using pandas use `.to_list()`.
 
 ``
 import wibblywobbly as ww
-
 catalog = ["Mouse", "Cat", "Dog", "Human"]
 data = ["mice",  "CAT ", "doggo", "PERSON", 999]
 ``
@@ -45,7 +44,7 @@ WibblyWobbly compares the data to the catalog and returns the most likely option
 
 It automaticaly accepts the catalog options that have a higher similarity score than `thr_accept` and rejects those that have a lower score than `thr_reject`. This treshold values can be adjusted depending in the data quality. It ignores non-string values.
 
-By default it returns a pandas dataframe that can be saved as a csv or excel file *.to_excel()*.
+By default it returns a pandas dataframe that can be saved as a csv or excel file `.to_excel()`.
 
 
 
@@ -63,14 +62,13 @@ ww.map_list_to_catalog(data, catalog, thr_accept=95, thr_reject=40)
 
 
 
-WibblyWobbly can also return a dictionary with the best options. This dictionary can be used to clean a pandas dataframe with *.replace()* and *.map()*.
+WibblyWobbly can also return a dictionary with the best options. This dictionary can be used to clean a pandas dataframe with `.replace()` and `.map()`.
 
 ``
 ww.map_list_to_catalog(data, catalog, output_format="dictionary")
 ``
-``
-{'mice': 'mice', 999: 999, 'doggo': 'Dog', 'PERSON': 'PERSON', 'CAT ': 'Cat'}
-``
+> {'mice': 'mice', 999: 999, 'doggo': 'Dog', 'PERSON': 'PERSON', 'CAT ': 'Cat'}
+
 
 
 It is possible set a `reject_value`.
@@ -78,9 +76,8 @@ It is possible set a `reject_value`.
 ``
 ww.map_list_to_catalog(data, catalog, output_format="dictionary", reject_value='Other')
 ``
-``
-{'mice': 'Other', 999: 999, 'doggo': 'Dog', 'PERSON': 'Other', 'CAT ': 'Cat'}
-``
+> {'mice': 'Other', 999: 999, 'doggo': 'Dog', 'PERSON': 'Other', 'CAT ': 'Cat'}
+
 
 
 WibblyWobbly can also raise warnings of the suspicious values to facilitate visual inspection.
@@ -90,14 +87,12 @@ ww.map_list_to_catalog(data, catalog, output_format="dictionary",
                            thr_accept=95, thr_reject=40,  warnings=True)
 ``
 
-``
-WOBBLY: mice
-    	Options: Mouse (44), Cat (29), Human (22)
-    WOBBLY: doggo
-    	Options: Dog (90), Mouse (20), Human (0)
-
-{'mice': 'Mouse', 999: 999, 'doggo': 'Dog', 'PERSON': 'PERSON', 'CAT ': 'Cat'}
-``
+> WOBBLY: mice
+>     	Options: Mouse (44), Cat (29), Human (22)
+>     WOBBLY: doggo
+>     	Options: Dog (90), Mouse (20), Human (0)
+> 
+> {'mice': 'Mouse', 999: 999, 'doggo': 'Dog', 'PERSON': 'PERSON', 'CAT ': 'Cat'}
 
 
 ## Versions
@@ -116,7 +111,7 @@ WOBBLY: mice
 Thanks
 ------
 
-The [thefuzz](https://github.com/seatgeek/thefuzz` team, you are amazing!
+The [thefuzz](https://github.com/seatgeek/thefuzz/) team, you are amazing!
 
 [Syats](https://github.com/syats/) for helping with the hierarchical code.
 
