@@ -16,16 +16,16 @@ It is a common nightmare for data scientist, your human users captured the data 
 
 Using PIP via PyPI
 
-´´´
+``
 pip install wibblywobbly
-´´´
+``
 
 WibblyWobbly extends hefuzz, it is recomended to install python-Levenshtein too
 
-´´´
+``
 pip install thefuzz
 pip install python-Levenshtein
-´´´
+``
 
 ## Usage
 
@@ -33,12 +33,12 @@ pip install python-Levenshtein
 
 Import wibblywobbly and load your data and catalog as list. If you are using pandas use *.to_list()*.
 
-´´´
+``
 import wibblywobbly as ww
 
 catalog = ["Mouse", "Cat", "Dog", "Human"]
 data = ["mice",  "CAT ", "doggo", "PERSON", 999]
-´´´
+``
 
 
 WibblyWobbly compares the data to the catalog and returns the most likely options and a similarity score. If it cannot find a good match it will return the original data.
@@ -49,9 +49,9 @@ By default it returns a pandas dataframe that can be saved as a csv or excel fil
 
 
 
-´´´
+``
 ww.map_list_to_catalog(data, catalog, thr_accept=95, thr_reject=40)
-´´´
+``
 
 |   | Data  | Option1 | Score1 | Option2 | Score2 | Option3 | Score3 |
 |---|-------|---------|--------|---------|--------|---------|--------|
@@ -65,39 +65,39 @@ ww.map_list_to_catalog(data, catalog, thr_accept=95, thr_reject=40)
 
 WibblyWobbly can also return a dictionary with the best options. This dictionary can be used to clean a pandas dataframe with *.replace()* and *.map()*.
 
-´´´
+``
 ww.map_list_to_catalog(data, catalog, output_format="dictionary")
-´´´
-´´´
+``
+``
 {'mice': 'mice', 999: 999, 'doggo': 'Dog', 'PERSON': 'PERSON', 'CAT ': 'Cat'}
-´´´
+``
 
 
 It is possible set a `reject_value`.
 
-´´´
+``
 ww.map_list_to_catalog(data, catalog, output_format="dictionary", reject_value='Other')
-´´´
-´´´
+``
+``
 {'mice': 'Other', 999: 999, 'doggo': 'Dog', 'PERSON': 'Other', 'CAT ': 'Cat'}
-´´´
+``
 
 
 WibblyWobbly can also raise warnings of the suspicious values to facilitate visual inspection.
 
-´´´
+``
 ww.map_list_to_catalog(data, catalog, output_format="dictionary", 
                            thr_accept=95, thr_reject=40,  warnings=True)
-´´´
+``
 
-´´´
+``
 WOBBLY: mice
     	Options: Mouse (44), Cat (29), Human (22)
     WOBBLY: doggo
     	Options: Dog (90), Mouse (20), Human (0)
 
 {'mice': 'Mouse', 999: 999, 'doggo': 'Dog', 'PERSON': 'PERSON', 'CAT ': 'Cat'}
-´´´
+``
 
 
 ## Versions
