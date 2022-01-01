@@ -1,0 +1,7 @@
+[build-system]
+requires = [
+    "thefuzz",
+    "unidecode",
+    "pandas"
+]
+build-backend = "setuptools.build_meta"

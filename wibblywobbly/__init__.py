@@ -1,5 +1,5 @@
 from wibblywobbly.core import map_list_to_catalog, cluster_strings, simplify_string, warn_review
-from wibblywobbly.hierarchical import list_to_nestdic, create_hierarchical_catalog
+from wibblywobbly.hierarchical import create_hierarchical_catalog
 
 
 
@@ -10,3 +10,4 @@ hierarchical
 	[//.] list_to_nestdic
 	[...] map_to_hierarchical_catalog: takes a pd.DataFrame and maps it to a hierarchical catalog
 """
+

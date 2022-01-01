@@ -86,14 +86,14 @@ class TestCore(unittest.TestCase):
                 self.assertIn( str(w.message), res )
 
     def test_cluster_strings(self):
-        data = ['mice', 'CAT ', 'doggo', 'PERSON', 'guinea pig', 'pig', 'Gorilla', 'Chimpanzee', 'orangután', 'chinpanze', 'gorila', nan, 'dogs', 'rats', 'mouse', 'kitty', 'Cat', 'macaco']
+        data = ['mice', 'CAT ', 'doggo', 'PERSON', 'guinea pig', 'pig', 'Gorilla', 'Chimpanzee', 'orangután', 'chinpanze', 'gorila', 'dogs', 'rats', 'mouse', 'kitty', 'Cat', 'macaco']
         res = [['gorila', 'Gorilla'],   ['chinpanze'],   ['  mouse'],   ['macaco'],   ['pig', 'guinea pig'],   ['doggo'],   ['mice'],   ['PERSON'],   ['dogs'],   ['orangután'],   ['CAT ', 'Cat'],   ['Chimpanzee'],   ['kitty']]
         seed(10)
         sol = ww.cluster_strings(df_data['Animal'])
         self.assertEqual( res, sol )
 
     def test_cluster_strings_noptions(self):
-        data = ['mice', 'CAT ', 'doggo', 'PERSON', 'guinea pig', 'pig', 'Gorilla', 'Chimpanzee', 'orangután', 'chinpanze', 'gorila', nan, 'dogs', 'rats', 'mouse', 'kitty', 'Cat', 'macaco']
+        data = ['mice', 'CAT ', 'doggo', 'PERSON', 'guinea pig', 'pig', 'Gorilla', 'Chimpanzee', 'orangután', 'chinpanze', 'gorila', 'dogs', 'rats', 'mouse', 'kitty', 'Cat', 'macaco']
         res = ['gorila', 'chinpanze', 'mouse', 'macaco', 'pig', 'doggo', 'mice', 'PERSON', 'dogs', 'orangután', 'CAT ', 'kitty']
         seed(10)
         sol = ww.cluster_strings(df_data['Animal'], thr_accept=75, max_options=1)
