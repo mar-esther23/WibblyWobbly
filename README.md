@@ -1,64 +1,62 @@
 # WibblyWobbly
 
-Python library to create equivalence dictionaries between a set of texts and a catalog using FuzzyWuzzy.
+## Overview
 
-It is a common nightmare for data scientist, your human users captured the data according to a "catalog" but it is full of mistakes. WibblyWobbly automates the task of automatically matching the data to a catalog while allowing for manual review of suspicious cases and rejecting bad matches.
+WibblyWobbly is a Python 3 library that creates equivalence dictionaries between a set of texts and a strings catalog using the fuzzy string matching [FuzzyWuzzy](https://pypi.org/project/fuzzywuzzy/). WibblyWobbly automates the matching of the data to a catalog while allowing for manual review of suspicious cases and rejecting bad matches. If it WibblyWobbly cannot find a good match it will return the original data.
+
+WibblyWobbly automaticaly accepts the catalog options that have a higher similarity score than a given acceptance threshold (`thr_accept`) and rejects those that have a lower score than agiven rejection threshold (`thr_reject`). This treshold values can be adjusted depending in the data quality. WibblyWobbly ignores non-string values.
+
+The default output of WibblyWobbly is a pandas dataframe that can be saved as a csv or excel file using `dataframe_name.to_excel()`.
 
 ## Requirements
 
--  Python 3 or higher
--  the fuzz
--  python-Levenshtein (optional)
--  unidecode
--  pandas
+-  [Python 3](https://www.python.org/downloads/) or higher
+-  [unidecode](https://pypi.org/project/Unidecode/): Python package
+-  [pandas](https://pandas.pydata.org/): Python set of data analysis and manipulation tools 
+-  [TheFuzz](https://github.com/seatgeek/thefuzz/): Python package
 
-#Instalation
 
-Using PIP via PyPI
+Additionally, you may want to get the [python-Levenshtein](https://github.com/ztane/python-Levenshtein/) package for python. It consists on a set of fast computation functions that may improve the performance time of WibblyWobbly.
 
-``
-pip install wibblywobbly
-``
+## Installation
 
-WibblyWobbly extends hefuzz, it is recomended to install python-Levenshtein too
+### Using PIP via PyPI
 
-``
-pip install thefuzz
-pip install python-Levenshtein
-``
+1. As WibblyWobbly is an extension of Thefuzz you must download Thefuzz first. It is recomended to install `python-Levenshtein` too. Consider that `python-Levenshtein` has its own dependencies. 
+   ```
+   pip install thefuzz
+   pip install python-Levenshtein #optional
+   ```
+2. Install WibblyWobbly.
+   ```
+   pip install wibblywobbly
+   ```
 
 ## Usage
 
-### Match data to a catalog
+### Match Data to a Catalog
 
-Import wibblywobbly and load your data and catalog as list. If you are using pandas use `.to_list()`.
-
-``
-import wibblywobbly as ww
-catalog = ["Mouse", "Cat", "Dog", "Human"]
-data = ["mice",  "CAT ", "doggo", "PERSON", 999]
-``
-
-
-WibblyWobbly compares the data to the catalog and returns the most likely options and a similarity score. If it cannot find a good match it will return the original data.
-
-It automaticaly accepts the catalog options that have a higher similarity score than `thr_accept` and rejects those that have a lower score than `thr_reject`. This treshold values can be adjusted depending in the data quality. It ignores non-string values.
-
-By default it returns a pandas dataframe that can be saved as a csv or excel file `.to_excel()`.
-
-
-
-``
-ww.map_list_to_catalog(data, catalog, thr_accept=95, thr_reject=40)
-``
-
-|   | Data  | Option1 | Score1 | Option2 | Score2 | Option3 | Score3 |
-|---|-------|---------|--------|---------|--------|---------|--------|
-| 0 | CAT   | Cat     | 100    | None    | NaN    | None    | NaN    |
-| 1 | doggo | Dog     | 90     | Mouse   | 20.0   | Human   | 0.0    |
-| 2 | mice  | Mouse   | 44     | Cat     | 29.0   | Human   | 22.0   |
-| 3 | PERSON | PERSON | 0      | None    | NaN    | None    | NaN    |
-| 4 | 999   | 999     | 0      | None    | NaN    | None    | NaN    |
+1. Import `wibblywobbly`.
+   ```
+   import wibblywobbly as ww
+   ```
+2. Load your data and catalog as lists (if you are using pandas use `.to_list()`.)
+   ```
+   catalog = ["Mouse", "Cat", "Dog", "Human"]
+   data = ["mice",  "CAT ", "doggo", "PERSON", 999]
+   ```
+3. Use the method `map_list_to_catalog` in your WibblyWobbly instance to match the data with the catalog in a pandas dataframe.
+   ```
+   ww.map_list_to_catalog(data, catalog, thr_accept=95, thr_reject=40)
+   ```
+   The following table shows an output table example for the catalog and data in two.
+   |   | Data  | Option1 | Score1 | Option2 | Score2 | Option3 | Score3 |
+   |---|-------|---------|--------|---------|--------|---------|--------|
+   | 0 | CAT   | Cat     | 100    | None    | NaN    | None    | NaN    |
+   | 1 | doggo | Dog     | 90     | Mouse   | 20.0   | Human   | 0.0    |
+   | 2 | mice  | Mouse   | 44     | Cat     | 29.0   | Human   | 22.0   |
+   | 3 | PERSON | PERSON | 0      | None    | NaN    | None    | NaN    |
+   | 4 | 999   | 999     | 0      | None    | NaN    | None    | NaN    |
 
 
 
