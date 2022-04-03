@@ -1,5 +1,20 @@
 # WibblyWobbly
 
+- [WibblyWobbly](#wibblywobbly)
+  - [Overview](#overview)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+    - [Using PIP via PyPI](#using-pip-via-pypi)
+  - [Usage](#usage)
+    - [Match Data to a Catalog](#match-data-to-a-catalog)
+    - [Return a Dictionary](#return-a-dictionary)
+    - [Set a `reject_value`.](#set-a-reject_value)
+    - [Raise Warnings](#raise-warnings)
+    - [Clean a Data Frame Using a Dictionary](#clean-a-data-frame-using-a-dictionary)
+    - [Cluster Strings and Create a Rough Catalog](#cluster-strings-and-create-a-rough-catalog)
+  - [Versions](#versions)
+  - [Acknowledgments](#acknowledgments)
+
 ## Overview
 
 A common issue When working with machine learning pipelines is to have data where names and descriptions are full of typos. 
