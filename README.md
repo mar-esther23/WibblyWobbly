@@ -1,6 +1,6 @@
 # WibblyWobbly
 
-- [WibblyWobbly](#wibblywobbly)
+## Table of Contents
   - [Overview](#overview)
   - [Requirements](#requirements)
   - [Installation](#installation)
