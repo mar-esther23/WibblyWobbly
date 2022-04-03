@@ -93,7 +93,7 @@ You can assign a reject value to any word that did not match the dictionary with
 2. Use the method `map_list_to_catalog` in your WibblyWobbly instance to match the data with the catalog. Set `output_format="dictionary"` and `reject_value='Other'`.
    ```python
    ww.map_list_to_catalog(data, catalog, output_format="dictionary", reject_value='Other')
-   >> {'mice': 'Other', 999: 999, 'doggo': 'Dog', 'PERSON': 'Other', 'CAT ': 'Cat'}
+   {'mice': 'Other', 999: 999, 'doggo': 'Dog', 'PERSON': 'Other', 'CAT ': 'Cat'}
    ```
 
 ### Raise Warnings 
@@ -104,7 +104,7 @@ Raising warnings of potential misclassified values facilitate visual inspection.
 ```python
 ww.map_list_to_catalog(data, catalog, output_format="dictionary", 
                            thr_accept=95, thr_reject=40,  warnings=True)
->> WOBBLY: mice
+WOBBLY: mice
      	Options: Mouse (44), Cat (29), Human (22)
      WOBBLY: doggo
      	Options: Dog (90), Mouse (20), Human (0)
@@ -280,14 +280,16 @@ To use WibblyWobbly as a rough clustering algorithm:
    > **Note:** This can be used as a very rough method to infer a catalog.
 
 ## Versions
--  0.2.0
-   - Uses theFuzz
-   - Includes a rough clustering algorithm
-   - Includes hierarchical dictionaries
+- 0.3.0
+  - Includes performance improvements. 
+- 0.2.0
+  - Uses theFuzz
+  - Includes a rough clustering algorithm.
+  - Includes hierarchical dictionaries.
 
 - 0.1.0
-   - This is the first WibblyWobbly version online!
-   - Includes basic operations to match list to catalogs
+  - This is the first WibblyWobbly version online!
+  - Includes basic operations to match list to catalogs.
 
 ## Acknowledgments
 Thank you, [TheFuzz](https://github.com/seatgeek/thefuzz/) team. You are amazing!
