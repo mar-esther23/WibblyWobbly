@@ -2,22 +2,22 @@
 
 ## Overview
 
-When working with machine learning pipelines, a common issue is to have data where the names and descriptions are is full of typos. 
+A common issue When working with machine learning pipelines is to have data where names and descriptions are full of typos. 
 
 WibblyWobbly is a Python 3 library that finds equivalence between a set of data strings and a strings catalog using fuzzy string matching [FuzzyWuzzy](https://pypi.org/project/fuzzywuzzy/). WibblyWobbly automates matching the data to a catalog while allowing for manual review of suspicious cases and rejecting bad matches. If WibblyWobbly cannot find a good match, it will return the original data.
 
 WibblyWobbly automatically accepts the catalog options with a higher similarity score than a given acceptance threshold (`thr_accept`) and rejects those with a lower score than a given rejection threshold (`thr_reject`). You can adjust these threshold values according to the data quality. WibblyWobbly ignores non-string values.
 
-The default output of WibblyWobbly is a pandas data frame that you can save as a CSV or excel file using `dataframe_name.to_excel()`.
+The default output of WibblyWobbly is a [`pandas`]((https://pandas.pydata.org/)) data frame that you can save as a CSV or Excel file using `dataframe_name.to_excel()`.
 
 ## Requirements
 
 -  [Python 3](https://www.python.org/downloads/) or higher
--  [`unidecode`](https://pypi.org/project/Unidecode/): Python package
--  [`pandas`](https://pandas.pydata.org/): Python set of data analysis and manipulation tools 
--  [TheFuzz](https://github.com/seatgeek/thefuzz/): Python package
+-  [`unidecode`](https://pypi.org/project/Unidecode/): Python package to interpret Unicode.
+-  [`pandas`](https://pandas.pydata.org/): Python set of data analysis and manipulation tools.
+-  [TheFuzz](https://github.com/seatgeek/thefuzz/): Python package to add fuzzy logic string matching.
 
-Additionally, you may want to get the [python-Levenshtein](https://github.com/ztane/python-Levenshtein/) package for Python. It consists of a set of fast computation functions that may improve the performance time of theFuzz (and therefore of WibblyWobbly).
+An optional dependence is the [python-Levenshtein](https://github.com/ztane/python-Levenshtein/) package for Python. It consists of a set of fast computation functions that may improve the performance time of TheFuzz (and therefore of WibblyWobbly).
 
 ## Installation
 
@@ -82,7 +82,7 @@ You can assign a reject value to any word that did not match the dictionary with
    ```
 
 ### Raise Warnings 
-Warnings of potential misclassified values to facilitate visual inspection. To raise warnings using WibblyWobbly:
+Raising warnings of potential misclassified values facilitate visual inspection. To raise warnings using WibblyWobbly:
 
 1. Run steps 1 and 2 from the section [Match Data to a Catalog](#Match-Data-to-a-Catalog).
 2. Use the method `map_list_to_catalog` in your WibblyWobbly instance to match the data with the catalog. Set `output_format="dictionary"` and `warnings=True`.
@@ -98,7 +98,7 @@ ww.map_list_to_catalog(data, catalog, output_format="dictionary",
 ```
 
 ### Clean a Data Frame Using a Dictionary 
-To use WibblyWobbly to a clean a pandas data using a dictionary as reference and the methods `_.replace()` and `_.map()`:
+To use WibblyWobbly to a clean a `pandas` dataframe using a dictionary as reference and the methods `_.replace()` and `_.map()`:
 1. Import `wibblywobbly`.
    ```python
    import wibblywobbly as ww
@@ -271,7 +271,7 @@ To use WibblyWobbly as a rough clustering algorithm:
    - Includes hierarchical dictionaries
 
 - 0.1.0
-   - Is the first WibblyWobbly version online!
+   - This is the first WibblyWobbly version online!
    - Includes basic operations to match list to catalogs
 
 ## Acknowledgments
