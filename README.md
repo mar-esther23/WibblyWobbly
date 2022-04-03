@@ -2,12 +2,11 @@
 
 ## Overview
 
-Oerview
-When working with machine learning pipelines, a common issue is having data where the names and descriptions are is full of typos. 
+When working with machine learning pipelines, a common issue is to have data where the names and descriptions are is full of typos. 
 
 WibblyWobbly is a Python 3 library that finds equivalence between a set of data strings and a strings catalog using fuzzy string matching [FuzzyWuzzy](https://pypi.org/project/fuzzywuzzy/). WibblyWobbly automates matching the data to a catalog while allowing for manual review of suspicious cases and rejecting bad matches. If WibblyWobbly cannot find a good match, it will return the original data.
 
-WibblyWobbly automatically accepts the catalog options with a higher similarity score than a given acceptance threshold (`thr_accept`) and rejects those with a lower score than a given rejection threshold (`thr_reject`). These threshold values can be adjusted depending on the data quality. WibblyWobbly ignores non-string values.
+WibblyWobbly automatically accepts the catalog options with a higher similarity score than a given acceptance threshold (`thr_accept`) and rejects those with a lower score than a given rejection threshold (`thr_reject`). You can adjust these threshold values according to the data quality. WibblyWobbly ignores non-string values.
 
 The default output of WibblyWobbly is a pandas data frame that you can save as a CSV or excel file using `dataframe_name.to_excel()`.
 
@@ -24,7 +23,8 @@ Additionally, you may want to get the [python-Levenshtein](https://github.com/zt
 
 ### Using PIP via PyPI
 
-1. As WibblyWobbly is an extension of Thefuzz, you must download Thefuzz first. To improve performance, install `python-Levenshtein` too. Consider that `python-Levenshtein` has its own dependencies. 
+1. As WibblyWobbly is an extension of TheFuzz, you must download TheFuzz first. To improve performance, install `python-Levenshtein` too. 
+   >**Note:** Consider that `python-Levenshtein` has its own dependencies. 
    ```python
    pip install thefuzz
    pip install python-Levenshtein #optional
@@ -82,7 +82,7 @@ You can assign a reject value to any word that did not match the dictionary with
    ```
 
 ### Raise Warnings 
-Warnings of potential missclassified values to facilitate visual inspection. To raise warnings using WibblyWobbly:
+Warnings of potential misclassified values to facilitate visual inspection. To raise warnings using WibblyWobbly:
 
 1. Run steps 1 and 2 from the section [Match Data to a Catalog](#Match-Data-to-a-Catalog).
 2. Use the method `map_list_to_catalog` in your WibblyWobbly instance to match the data with the catalog. Set `output_format="dictionary"` and `warnings=True`.
@@ -98,7 +98,7 @@ ww.map_list_to_catalog(data, catalog, output_format="dictionary",
 ```
 
 ### Clean a Data Frame Using a Dictionary 
-To use WibblyWobbly to a clena clean a pandas data using a dictionary as reference and the methods `_.replace()` and `_.map()`:
+To use WibblyWobbly to a clean a pandas data using a dictionary as reference and the methods `_.replace()` and `_.map()`:
 1. Import `wibblywobbly`.
    ```python
    import wibblywobbly as ww
@@ -156,7 +156,7 @@ To use WibblyWobbly to a clena clean a pandas data using a dictionary as referen
    ```
 5. Create an equivalence dictionary using `map_list_to_catalog`. Set `output_format="dictionary"`, to get a dictionary and `warnings=True` to check the results.
    >**Note:**
-   You may be need to adjust `thr_accept` and `thr_reject` to get better results.
+   You may need to adjust `thr_accept` and `thr_reject` to get better results.
    ```python
    equivalence = ww.map_list_to_catalog(data, catalog, output_format="dictionary", thr_accept=80, thr_reject=50, warnings=True)
    REJECT: PERSON
@@ -245,14 +245,14 @@ To use WibblyWobbly as a rough clustering algorithm:
    df_data['Animal'].to_list()
    ['mice', 'CAT ', 'doggo', 'PERSON', 'guinea pig', 'pig', 'Gorilla', 'Chimpanzee', 'orangután', 'chinpanze', 'gorila', nan, 'dogs', 'rats', 'mouse', 'kitty', 'Cat', 'macaco']
    ```
-4. Set a random seed for the clustering algotrithm.
+4. Set a random seed for the clustering algorithm.
    ```python
    import random
    random.seed(10)
    ```
 5. Group the strings whose Levenshtein distance is higher than `thr_accept` using `_.cluster_strings()`.  
    >**Note:**
-   This is a rough algoritm, once a cluster has been formed none of its elements will belong to an other cluster.
+   This is a rough algorithm. Once a cluster forms, none of its elements will belong to another cluster.
    ```python
    ww.cluster_strings(df_data['Animal'])
   [['pig', 'guinea pig'], ['mouse'], ['Cat', 'CAT '], ['Chimpanzee'], ['Gorilla', 'gorila'], ['PERSON'], ['macaco'], ['mice'], ['orangután'], ['doggo'], ['kitty'], ['chinpanze'], ['rats']]
@@ -274,11 +274,11 @@ To use WibblyWobbly as a rough clustering algorithm:
    - Is the first WibblyWobbly version online!
    - Includes basic operations to match list to catalogs
 
-## Acknowledgements
-Thank you [theFuzz](https://github.com/seatgeek/thefuzz/) team. You are amazing!
+## Acknowledgments
+Thank you, [TheFuzz](https://github.com/seatgeek/thefuzz/) team. You are amazing!
 
-Thank you [Syats](https://github.com/syats/) for helping with the hierarchical code.
+Thank you, [Syats](https://github.com/syats/) for helping with the hierarchical code.
 
 ---
->You see, most people think that time is a strict progression of cause to effect, but actually, from a non-linear, non-subjective point of view, it’s more like a big ball of... Wibbly-Wobbly... Timey-Wimey... stuff. </p>
+>People assume that time is a strict progression of cause to effect, but actually from a non-linear, non-subjective point of view, it’s more like a big ball of wibbly-wobbly, timey-wimey stuff. </p>
 <p align="right">The Doctor</p>
