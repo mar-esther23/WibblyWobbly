@@ -15,7 +15,7 @@ The default output of WibblyWobbly is a pandas data frame that you can save as a
 -  [Python 3](https://www.python.org/downloads/) or higher
 -  [`unidecode`](https://pypi.org/project/Unidecode/): Python package
 -  [`pandas`](https://pandas.pydata.org/): Python set of data analysis and manipulation tools 
--  [theFuzz](https://github.com/seatgeek/thefuzz/): Python package
+-  [TheFuzz](https://github.com/seatgeek/thefuzz/): Python package
 
 Additionally, you may want to get the [python-Levenshtein](https://github.com/ztane/python-Levenshtein/) package for Python. It consists of a set of fast computation functions that may improve the performance time of theFuzz (and therefore of WibblyWobbly).
 
