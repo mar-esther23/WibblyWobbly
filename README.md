@@ -283,7 +283,7 @@ To use WibblyWobbly as a rough clustering algorithm:
 - 0.3.0
   - Includes performance improvements. 
 - 0.2.0
-  - Uses theFuzz
+  - Uses theFuzz.
   - Includes a rough clustering algorithm.
   - Includes hierarchical dictionaries.
 
