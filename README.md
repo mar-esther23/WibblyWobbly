@@ -3,7 +3,7 @@
 ## Overview
 
 Oerview
-When working with machine learning pipelines, a common issue is having data matched to a catalog where the classification is full of mistakes. 
+When working with machine learning pipelines, a common issue is having data where the names and descriptions are is full of typos. 
 
 WibblyWobbly is a Python 3 library that finds equivalence between a set of data strings and a strings catalog using fuzzy string matching [FuzzyWuzzy](https://pypi.org/project/fuzzywuzzy/). WibblyWobbly automates matching the data to a catalog while allowing for manual review of suspicious cases and rejecting bad matches. If WibblyWobbly cannot find a good match, it will return the original data.
 
@@ -52,15 +52,13 @@ To match data to a catalog:
 3. Use the method `map_list_to_catalog` in your WibblyWobbly instance to match the data with the catalog in a pandas dataframe.
    ```python
    ww.map_list_to_catalog(data, catalog, thr_accept=95, thr_reject=40)
+        Data Option1  Score1 Option2  Score2 Option3  Score3
+   0    CAT      Cat     100    None     NaN    None     NaN
+   1   doggo     Dog      90   Mouse    20.0   Human     0.0
+   2    mice   Mouse      44     Cat    29.0   Human    22.0
+   3  PERSON  PERSON       0    None     NaN    None     NaN
+   4     999     999       0    None     NaN    None     NaN
    ```
-   The following table shows an output table example for the catalog and data in two.
-   |   | Data  | Option1 | Score1 | Option2 | Score2 | Option3 | Score3 |
-   |---|-------|---------|--------|---------|--------|---------|--------|
-   | 0 | CAT   | Cat     | 100    | None    | NaN    | None    | NaN    |
-   | 1 | doggo | Dog     | 90     | Mouse   | 20.0   | Human   | 0.0    |
-   | 2 | mice  | Mouse   | 44     | Cat     | 29.0   | Human   | 22.0   |
-   | 3 | PERSON | PERSON | 0      | None    | NaN    | None    | NaN    |
-   | 4 | 999   | 999     | 0      | None    | NaN    | None    | NaN    |
 
 ### Return a Dictionary
 
@@ -210,6 +208,61 @@ To use WibblyWobbly to a clena clean a pandas data using a dictionary as referen
    ```python
    df_data.to_csv("./tests/example_clean_name.csv")
    ```
+
+### Cluster Strings and Create a Rough Catalog
+
+To use WibblyWobbly as a rough clustering algorithm:
+1. Import `wibblywobbly`.
+   ```python
+   import wibblywobbly as ww
+   ```
+2. Load the data table using either `_.read_csv()_` or `_.read_excel()_` method.
+   ```python
+   df_data = pd.read_csv("./tests/example_dirty_name.csv")
+   df_data
+           Animal  Count
+   0         mice      3
+   1         CAT       1
+   2        doggo      5
+   3       PERSON      0
+   4   guinea pig      1
+   5          pig      2
+   6      Gorilla      3
+   7   Chimpanzee      0
+   8    orangután      1
+   9    chinpanze      7
+   10      gorila      3
+   11         NaN      6
+   12        dogs      2
+   13        rats     12
+   14       mouse      1
+   15       kitty      3
+   16         Cat      2
+   17      macaco      1
+   ```
+3. Convert the data frame to list.
+   ```python
+   df_data['Animal'].to_list()
+   ['mice', 'CAT ', 'doggo', 'PERSON', 'guinea pig', 'pig', 'Gorilla', 'Chimpanzee', 'orangután', 'chinpanze', 'gorila', nan, 'dogs', 'rats', 'mouse', 'kitty', 'Cat', 'macaco']
+   ```
+4. Set a random seed for the clustering algotrithm.
+   ```python
+   import random
+   random.seed(10)
+   ```
+5. Group the strings whose Levenshtein distance is higher than `thr_accept` using `_.cluster_strings()`.  
+   >**Note:**
+   This is a rough algoritm, once a cluster has been formed none of its elements will belong to an other cluster.
+   ```python
+   ww.cluster_strings(df_data['Animal'])
+  [['pig', 'guinea pig'], ['mouse'], ['Cat', 'CAT '], ['Chimpanzee'], ['Gorilla', 'gorila'], ['PERSON'], ['macaco'], ['mice'], ['orangután'], ['doggo'], ['kitty'], ['chinpanze'], ['rats']]
+   ```
+6. To change the number maximum number of elements (x) in the cluster set `max_options=x`:
+   ```python
+   ww.cluster_strings(df_data['Animal'], thr_accept=75, max_options=1)
+   ['Cat', 'kitty', 'doggo', 'Gorilla', 'mouse', 'guinea pig', 'Chimpanzee', 'macaco', 'rats', 'PERSON', 'dogs', 'mice']
+   ```
+   > **Note:** This can be used as a very rough method to infer a catalog.
 
 ## Versions
 -  0.2.0
