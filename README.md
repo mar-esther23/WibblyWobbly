@@ -270,7 +270,7 @@ To use WibblyWobbly as a rough clustering algorithm:
    This is a rough algorithm. Once a cluster forms, none of its elements will belong to another cluster.
    ```python
    ww.cluster_strings(df_data['Animal'])
-  [['pig', 'guinea pig'], ['mouse'], ['Cat', 'CAT '], ['Chimpanzee'], ['Gorilla', 'gorila'], ['PERSON'], ['macaco'], ['mice'], ['orangután'], ['doggo'], ['kitty'], ['chinpanze'], ['rats']]
+   [['pig', 'guinea pig'], ['mouse'], ['Cat', 'CAT '], ['Chimpanzee'], ['Gorilla', 'gorila'], ['PERSON'], ['macaco'], ['mice'], ['orangután'], ['doggo'], ['kitty'], ['chinpanze'], ['rats']]
    ```
 6. To change the number maximum number of elements (x) in the cluster set `max_options=x`:
    ```python
