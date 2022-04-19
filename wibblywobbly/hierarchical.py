@@ -49,3 +49,25 @@ def create_hierarchical_catalog(df):
         old = row[1].to_list()
     return dic
 
+
+
+def map_named_series_to_catalog(series, catalog, **kwargs):
+    logging.info(series.name)
+    if series.name not in catalog.keys():
+        if "reject_value" in kwargs and kwargs.get("reject_value")!=None:
+            return kwargs.get("reject_value")
+        else: return series
+    cat_name = catalog[series.name]
+    if type(cat_name)==dict:  cat_name = cat_name.keys()
+    logging.info('catalog:' +str(cat_name))
+    data = [d[0] for d in series.values]
+    logging.info('data:' +str(data) )
+    rep = ww.map_list_to_catalog( data, cat_name, output_format="dictionary", **kwargs )
+    logging.info('replace: ' +str(rep))
+    return series.replace(rep)
+
+
+def map_hierarchical_catalog_two(df, catalog, high=0, low=1, **kwargs):
+    grouped = df[[high,low]].groupby(high)
+    res = grouped.transform( map_named_series_to_catalog, catalog=catalog)
+    return res
