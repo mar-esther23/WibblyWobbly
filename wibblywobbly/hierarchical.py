@@ -51,23 +51,54 @@ def create_hierarchical_catalog(df):
 
 
 
-def map_named_series_to_catalog(series, catalog, **kwargs):
-    logging.info(series.name)
-    if series.name not in catalog.keys():
-        if "reject_value" in kwargs and kwargs.get("reject_value")!=None:
-            return kwargs.get("reject_value")
-        else: return series
-    cat_name = catalog[series.name]
-    if type(cat_name)==dict:  cat_name = cat_name.keys()
-    logging.info('catalog:' +str(cat_name))
-    data = [d[0] for d in series.values]
-    logging.info('data:' +str(data) )
-    rep = ww.map_list_to_catalog( data, cat_name, output_format="dictionary", **kwargs )
-    logging.info('replace: ' +str(rep))
-    return series.replace(rep)
+import warnings
 
 
-def map_hierarchical_catalog_two(df, catalog, high=0, low=1, **kwargs):
-    grouped = df[[high,low]].groupby(high)
-    res = grouped.transform( map_named_series_to_catalog, catalog=catalog)
+def warn_text(message, category='', filename='', lineno='', line=''):
+    return str(message)
+
+def warn_review(category, item, options):
+    """
+    Overwrite formatwarning to simplify options evaluation.
+    """
+    # create message
+    options = ', '.join(["{} ({})".format(*i) for i in options])
+    message = "{}: {}\n\tOptions: {}\n".format( category, item, options )
+    # raise warning
+    warnings.formatwarning = warn_text
+    warnings.warn(message)
+
+def get_list_from_hierarchical_catalog_keys(catalog, keys=None, error=[]):
+    catl = catalog
+    # check keys
+    if keys!=None:
+        if type(keys) not in [list,tuple]: keys = [keys]
+        for k in keys:
+            if k in catl.keys():
+                catl = catl[k]
+            else:
+                message =  "NameError: '{}' not in catalog. Retuning: {}\n\tKeys: {}\n".format(k, error, keys)
+                warnings.formatwarning = warn_text
+                warnings.warn(message)
+                catl = error
+    # simplify to list
+    if type(catl)==dict: catl = catl.keys()
+    return catl
+
+def map_hierarchical_catalog(df, catalog, target=0, keys=None, **kwargs):
+    if keys==None: #not a hierarchical clasify
+        grouped = [(None,df)]
+    else: grouped = df.groupby(keys)
+    res = []
+    for name, group in grouped:
+        logging.info('Target: '+str(target)+'\tGroup: ' + str(name) +'\tSize: ' +str(group.size))
+        data = group[target]
+        catl = get_list_from_hierarchical_catalog_keys(catalog, keys=name)
+        if len(catl)>0:
+            catl = ww.map_list_to_catalog(data, catl, output_format="dictionary", **kwargs)
+        if len(catl)>0:
+            data = data.replace( catl )
+        res.append( data )
+    logging.info(res)
+    res = pd.concat(res)
     return res
